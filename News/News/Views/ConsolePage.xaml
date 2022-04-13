@@ -14,7 +14,7 @@
         <StackLayout>
             <Button Text="Run your Console program" Clicked="Button_Clicked" />
             <ScrollView>
-                <Editor x:Name="myOutput" IsReadOnly="True" AutoSize="TextChanges"/>
+                <Editor x:Name="myOutput" IsReadOnly="False" AutoSize="TextChanges"/>
             </ScrollView>
         </StackLayout>
     </StackLayout>

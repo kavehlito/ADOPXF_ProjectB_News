@@ -1,18 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Net.Http;
-using System.Net.Http.Json; //Requires nuget package System.Net.Http.Json
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
-using System.Text.Json;
-
-using News.Models;
+﻿using News.Models;
 using News.Services;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace News.Consoles
+
+
+    // mer async?!
 {
     //Your can move your Console application Main here. Rename Main to myMain and make it NOT static and async
     class Program
@@ -20,7 +14,7 @@ namespace News.Consoles
         #region used by the Console
         Views.ConsolePage theConsole;
         StringBuilder theConsoleString;
-        public Program (Views.ConsolePage myConsole)
+        public Program(Views.ConsolePage myConsole)
         {
             //used for the Console
             theConsole = myConsole;
@@ -32,6 +26,48 @@ namespace News.Consoles
         //This is the method you replace with your async method renamed and NON static Main
         public async Task myMain()
         {
+            NewsService service = new NewsService();
+            service.NewsAvailable += ReportNewsAvailabe;
+
+            Task<NewsGroup> t1 = null;
+
+            for (NewsCategory c = NewsCategory.business; c < NewsCategory.technology + 1; c++)
+            {
+                await service.GetNewsAsync(c);
+                t1 =  service.GetNewsAsync(c);
+                theConsoleString.AppendLine($"News in {t1.Result.Category}:");
+
+                foreach (var item in t1.Result.Articles)
+                {
+                    theConsoleString.AppendLine($"    -{item.DateTime}: {item.Title}");
+                }
+                theConsole.WriteLine(theConsoleString.ToString());
+            theConsoleString.Clear();
+            }
+            t1.Wait();
+
+            Task<NewsGroup> t2 = null;
+
+            for (NewsCategory c = NewsCategory.business; c < NewsCategory.technology + 1; c++)
+            {
+                await service.GetNewsAsync(c);
+                t2 = service.GetNewsAsync(c);
+                theConsoleString.AppendLine($"News in {t2.Result.Category}:");
+
+                foreach (var item in t2.Result.Articles)
+                {
+                    theConsoleString.AppendLine($"    -{item.DateTime}: {item.Title}");
+                }
+                theConsole.WriteLine(theConsoleString.ToString());
+                theConsoleString.Clear();
+            }
+            t2.Wait();
+            void ReportNewsAvailabe(object sender, string message)
+            {
+                theConsole.WriteLine($"Event message from news service: {message}");
+            }
+
+            /*
             theConsole.WriteLine("Demo program output");
 
             //Write an output to the Console
@@ -68,6 +104,8 @@ namespace News.Consoles
         {
             theConsole.WriteLine($"Event message: {message}"); //theConsole is a Captured Variable, don't use myConsoleString here
         }
-        #endregion
+            */
+            #endregion
+        }
     }
 }

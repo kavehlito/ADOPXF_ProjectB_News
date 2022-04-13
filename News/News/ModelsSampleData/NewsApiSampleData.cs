@@ -18,7 +18,7 @@ namespace News.ModelsSampleData
                 return n;
             });
 
-            return await t;
+            return await t;         // ska vara await?
 
             static NewsApiData Deserialize(string fname)
             {

@@ -18,18 +18,42 @@ namespace News.Models
         public string Key => category.ToString() + timewindow;
         public bool CacheExist => File.Exists(FileName);
 
-        public NewsCacheKey (NewsCategory category, DateTime dt)
+        public static void Serialize(NewsGroup news, string fileName)
         {
-            this.category = category;
-            timewindow = DateTime.Now.ToString("yyyy-MM-dd-HH-mm"); //Cache expiration every minute
-//            timewindow = DateTime.Now.ToString("yyyy-MM-dd-HH"); //Cache expiration every hour
+            var _locker = new object();
+            lock (_locker)
+            {
+                var xs = new XmlSerializer(typeof(NewsGroup));
+                using (Stream s = File.Create(fname(fileName)))
+                    xs.Serialize(s, news);
+            }
+        }
+        public static NewsGroup Deserialize(string fileName)
+        {
+            var _locker = new object();
+            lock (_locker)
+            {
+                NewsGroup news;
+                var xs = new XmlSerializer(typeof(NewsGroup));
+
+                using (Stream s = File.OpenRead(fname(fileName)))
+                    news = (NewsGroup)xs.Deserialize(s);
+
+                return news;
+            }
         }
         static string fname(string name)
         {
             var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            documentPath = Path.Combine(documentPath, "AOOP2", "Project Part B");
+            documentPath = Path.Combine(documentPath, "Projekt B", "News");
             if (!Directory.Exists(documentPath)) Directory.CreateDirectory(documentPath);
             return Path.Combine(documentPath, name);
+        }
+        public NewsCacheKey (NewsCategory category, DateTime dt)
+        {
+            this.category = category;
+            timewindow = DateTime.Now.ToString("yyyy-MM-dd-HH-mm"); //Cache expiration every minute
+        // timewindow = DateTime.Now.ToString("yyyy-MM-dd-HH"); //Cache expiration every hour
         }
       }
 
@@ -39,17 +63,17 @@ namespace News.Models
         public NewsCategory Category { get; set; }
         public List<NewsItem> Articles { get; set; }
 
-        public static void Serialize(NewsGroup news, string fname)
+        public static void Serialize(NewsGroup news, string fileName)
         {
             var _locker = new object();
             lock (_locker)
             { 
                 var xs = new XmlSerializer(typeof(NewsGroup));
-                using (Stream s = File.Create(fname))
+                using (Stream s = File.Create(fname(fileName)))
                     xs.Serialize(s, news);
             }
         }
-        public static NewsGroup Deserialize(string fname)
+        public static NewsGroup Deserialize(string fileName)
         {
             var _locker = new object();
             lock (_locker)
@@ -57,11 +81,18 @@ namespace News.Models
                 NewsGroup news;
                 var xs = new XmlSerializer(typeof(NewsGroup));
 
-                using (Stream s = File.OpenRead(fname))
+                using (Stream s = File.OpenRead(fname(fileName)))
                     news = (NewsGroup)xs.Deserialize(s);
 
                 return news;
             }
+        }
+        static string fname(string name)
+        {
+            var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            documentPath = Path.Combine(documentPath, "Projekt B", "News");
+            if (!Directory.Exists(documentPath)) Directory.CreateDirectory(documentPath);
+            return Path.Combine(documentPath, name);
         }
     }
 }
