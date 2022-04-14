@@ -1,12 +1,13 @@
 ﻿using News.Models;
 using News.Services;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace News.Consoles
 
 
-    // mer async?!
+// mer async?!
 {
     //Your can move your Console application Main here. Rename Main to myMain and make it NOT static and async
     class Program
@@ -24,7 +25,7 @@ namespace News.Consoles
 
         #region Console Demo program
         //This is the method you replace with your async method renamed and NON static Main
-        public async Task myMain()
+        public async Task MyMain()
         {
             NewsService service = new NewsService();
             service.NewsAvailable += ReportNewsAvailabe;
@@ -34,7 +35,7 @@ namespace News.Consoles
             for (NewsCategory c = NewsCategory.business; c < NewsCategory.technology + 1; c++)
             {
                 await service.GetNewsAsync(c);
-                t1 =  service.GetNewsAsync(c);
+                t1 = service.GetNewsAsync(c);
                 theConsoleString.AppendLine($"News in {t1.Result.Category}:");
 
                 foreach (var item in t1.Result.Articles)
@@ -42,9 +43,10 @@ namespace News.Consoles
                     theConsoleString.AppendLine($"    -{item.DateTime}: {item.Title}");
                 }
                 theConsole.WriteLine(theConsoleString.ToString());
-            theConsoleString.Clear();
+                theConsoleString.Clear();
             }
             t1.Wait();
+
 
             Task<NewsGroup> t2 = null;
 

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="News.Views.NewsPage">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout>
+                <Button Text="Refresh" BackgroundColor="Green" TextColor="Black" Clicked="Button_Clicked"/>
+                <ProgressBar x:Name="progBar" Progress="0" HeightRequest="15" IsVisible="false"/>
+                <Label x:Name="lblHeader" FontSize="20" HorizontalOptions="Center"/>
+            </StackLayout>
+            <ListView x:Name="NewsList" ItemTapped="NewsList_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal" Padding="5,10,5,15">
+                                <StackLayout HorizontalOptions="Start" Orientation="Vertical" Padding="3">
+                                    <Image Source="{Binding UrlToImage}" HorizontalOptions="FillAndExpand" WidthRequest="100"/>
+                                </StackLayout>
+                                <StackLayout HorizontalOptions="Start" Orientation="Vertical">
+                                    <Label Text="{Binding DateTime, StringFormat='{0:F}'}" HorizontalOptions="Start" VerticalOptions="Start" FontSize="15"/>
+                                    <Label HorizontalOptions="Start" VerticalOptions="Center" FontSize="20" FontAttributes="Bold" Text="{Binding Title}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

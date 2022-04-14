@@ -13,8 +13,8 @@ namespace News.Services
     public class NewsService
     {
         //Here is where you lift in your Service code from Part A
-        HttpClient httpClient = new HttpClient();
-        readonly string apiKey = "9675893a74da4c93ae708e22ce946372";
+        //HttpClient httpClient = new HttpClient();
+        readonly string apiKey = "a389335d7a5044a49c01cb03ab5a9267";
 
         public event EventHandler<string> NewsAvailable;
         protected virtual void OnNewsAvailable(string message)
@@ -53,8 +53,7 @@ namespace News.Services
             if (!cacheKey.CacheExist)
             {
                     NewsApiData nd = await NewsApiSampleData.GetNewsApiSampleAsync(category);
-                try
-                {
+                
                     news.Category = category;
                     news.Articles = nd.Articles.Select(item => new NewsItem
                     {
@@ -65,11 +64,6 @@ namespace News.Services
                         UrlToImage = item.UrlToImage
 
                     }).ToList();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
 
                 NewsGroup.Serialize(news, "test.xml");
                 NewsCacheKey.Serialize(news, cacheKey.FileName);
