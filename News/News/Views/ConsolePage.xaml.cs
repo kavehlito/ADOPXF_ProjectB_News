@@ -18,6 +18,7 @@ namespace News.Views
         {
             InitializeComponent();
             myOutput.Text = "";
+
         }
         public void WriteLine()
         {
