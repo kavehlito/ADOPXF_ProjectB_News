@@ -12,7 +12,6 @@ namespace News.Views
     public partial class NewsPage : ContentPage
     {
         NewsService service;
-        string URL;
         public NewsPage()
         {
             InitializeComponent();
@@ -43,7 +42,6 @@ namespace News.Views
                 Task<NewsGroup> t1 = service.GetNewsAsync(category);
                 var items = t1.Result.Articles;
                 NewsList.ItemsSource = items;
-                URL = items[0].Url;
             }
             catch (Exception)
             {
@@ -66,9 +64,8 @@ namespace News.Views
 
         private async void NewsList_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            await Navigation.PushAsync(new ArticleView(URL));
+            var newsPage = (NewsItem)e.Item;
+            await Navigation.PushAsync(new ArticleView(newsPage.Url));
         }
-
-
     }
 }
